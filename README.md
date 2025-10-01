@@ -13,7 +13,7 @@ Supports **inertia scroll, load more, gradient indicators, highlight, spy, and c
 
 ### 🚀 Live Demo
 
-👉 [Codesandbox](https://codesandbox.io/p/sandbox/rff3d2?file=%2Fsrc%2FApp.tsx)
+👉 [Codesandbox](https://codesandbox.io/p/sandbox/rff3d2)
 
 ---
 
@@ -27,10 +27,10 @@ Supports **inertia scroll, load more, gradient indicators, highlight, spy, and c
   - Highlight item
   - Gradient indicators
   - Custom "Load More" support
-  - AI suggetsion
 - 🛠 Exposed **ref API** for programmatic control
 - 🔄 Many event callbacks for scroll control
 - 🚀 Easy integration into lists, tables, dashboards
+- 🤖 AI Suggestions (context-aware tips, empty state helper)
 
 ---
 
@@ -45,7 +45,7 @@ npm install react-neo-scrollbar-z
 ## 🚀 Basic Usage
 
 ```tsx
-import "react-perfect-scrollbar-z/build/styles.css";
+import "react-neo-scrollbar-z/build/styles.css";
 
 import React, { useRef } from "react";
 import Scrollbar from "react-neo-scrollbar-z";
@@ -79,6 +79,8 @@ export default function TableWithLoadMore() {
       name: `Item ${start + i + 1}`,
     }));
     setItems((prev) => [...prev, ...newItems]);
+
+    return hasMore; // has more
   };
 
   return (
@@ -215,9 +217,19 @@ export interface IFScrollbarPlugin {
   onReachRight?: () => void;
   onReachThreshold?: (percent: number) => void;
 }
+```
 
-// list plugins
-
+### List plugins
+```bash
+bounceEffectPlugin
+bounceHighlightPlugin
+gradientIndicatorPlugin
+highlightItemPlugin
+inertiaPlugin
+loadMorePlugin
+pullToRefreshPlugin
+scrollSpyPlugin
+snapToItemPlugin
 ```
 
 ### Example: Custom Load More Plugin

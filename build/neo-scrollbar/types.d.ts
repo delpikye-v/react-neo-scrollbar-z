@@ -27,6 +27,7 @@ export interface IFScrollbarRefProps {
     destroy: () => void;
     getScrollbar: () => any | null;
     getScrollElement: () => HTMLElement | null;
+    resetMomentum: () => any;
     scrollToX: (x: number, duration?: number, easing?: ScrollEasingFn) => void;
     scrollToY: (y: number, duration?: number, easing?: ScrollEasingFn) => void;
     scrollToTop: (duration?: number, easing?: ScrollEasingFn) => void;
