@@ -1,8 +1,8 @@
-import type { ReactNode } from "react";
 import type { IFScrollbarPlugin } from "../types";
+import type { ReactNode } from "react";
 export interface IFLoadMorePluginOptions {
     threshold?: number;
-    onLoadMore: () => Promise<boolean>;
+    onLoadMore: () => Promise<boolean | void>;
     onCompleted?: () => void;
     loading?: ReactNode;
     done?: ReactNode;

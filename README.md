@@ -47,74 +47,118 @@ npm install react-neo-scrollbar-z
 ```tsx
 import "react-neo-scrollbar-z/build/styles.css";
 
-import React, { useRef } from "react";
-import Scrollbar from "react-neo-scrollbar-z";
-import { loadMorePlugin } from "react-neo-scrollbar-z";
+import React, { useState, useEffect, useRef } from "react";
+import Scrollbar, {
+  loadMorePlugin,
+  pullToRefreshPlugin,
+} from "react-neo-scrollbar-z";
+import type { IFScrollbarRefProps } from "react-neo-scrollbar-z";
 
-interface Item {
+interface Post {
   id: number;
-  name: string;
+  title: string;
+  body: string;
 }
 
-export default function TableWithLoadMore() {
-  const [items, setItems] = useState<Item[]>([]);
-  const scrollbarRef = useRef<any>(null);
+export default function DemoApp() {
+  const scrollbarRef = useRef<IFScrollbarRefProps>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
+  // Init posts
   useEffect(() => {
-    // initial load
-    setItems(
-      Array.from({ length: 20 }, (_, i) => ({
-        id: i + 1,
-        name: `Item ${i + 1}`,
-      }))
-    );
+    const initial: Post[] = Array.from({ length: 10 }, (_, i) => ({
+      id: i + 1,
+      title: `Post ${i + 1}`,
+      body: "Demo content",
+    }));
+    setPosts(initial);
   }, []);
 
-  const loadMore = async () => {
-    // simulate API delay
-    await new Promise((res) => setTimeout(res, 1000));
-    const start = items.length;
-    const newItems = Array.from({ length: 10 }, (_, i) => ({
-      id: start + i + 1,
-      name: `Item ${start + i + 1}`,
-    }));
-    setItems((prev) => [...prev, ...newItems]);
+  // Pull-to-refresh handler
+  const handleRefresh = async () => {
+    await new Promise((r) => setTimeout(r, 1000));
+    const newPost: Post = {
+      id: Date.now(),
+      title: `Refreshed Post ${Date.now()}`,
+      body: "Pulled to refresh",
+    };
+    setPosts((prev) => [newPost, ...prev]);
+  };
 
-    return hasMore; // has more
+  // LoadMore handler
+  const handleLoadMore = async () => {
+    if (!hasMore) return false;
+
+    await new Promise((r) => setTimeout(r, 1000));
+
+    const nextId = posts.length + 1;
+    const newPosts: Post[] = Array.from({ length: 5 }, (_, i) => ({
+      id: nextId + i,
+      title: `Loaded Post ${nextId + i}`,
+      body: "Loaded via scroll",
+    }));
+
+    setPosts((prev) => [...prev, ...newPosts]);
+    setPage((p) => p + 1);
+
+    if (page >= 3) {
+      setHasMore(false);
+      return false; // stop
+    }
+    return true; // has data
   };
 
   return (
-    <div style={{ width: 400, margin: "20px auto" }}>
+    <div>
       <Scrollbar
         ref={scrollbarRef}
-        maxHeight={300}
-        // injectTable => find first table and apply tbody
-        plugins={[
-          loadMorePlugin({
-            onLoadMore: loadMore,
-            threshold: 50, // px
-            loading: <div>Loading more rows...</div>,
-            done: <div>✅ Done!</div>,
-          }),
-        ]}
+        maxHeight={400}
+        effectData={posts}
+        plugins={
+          [
+            // pullToRefreshPlugin({
+            //   onRefresh: handleRefresh,
+            // }),
+            // loadMorePlugin({
+            //   threshold: 0.9, // 90% scroll
+            //   onLoadMore: handleLoadMore,
+            //   loading: <div style={{ color: "#1890ff" }}>Loading more...</div>,
+            //   done: <div style={{ color: "green" }}>✓ Loaded</div>,
+            //   completed: <div style={{ color: "gray" }}>No more data</div>,
+            // }),
+            // more
+          ]
+        }
       >
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <tr key={item.id} style={{ borderBottom: "1px solid #ccc" }}>
-                <td>{item.id}</td>
-                <td>{item.name}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ul style={{ padding: 0, margin: 0 }}>
+          {posts.map((post) => (
+            <li
+              key={post.id}
+              style={{
+                listStyle: "none",
+                padding: "8px 12px",
+                borderBottom: "1px solid #eee",
+              }}
+            >
+              <strong>
+                {post.id}. {post.title}
+              </strong>
+              <p>{post.body}</p>
+            </li>
+          ))}
+        </ul>
       </Scrollbar>
+
+      <div style={{ marginTop: 10, display: "flex", gap: 8 }}>
+        <button onClick={() => scrollbarRef.current?.scrollToBottom(500)}>
+          Scroll To Bottom
+        </button>
+        <button onClick={() => scrollbarRef.current?.update()}>
+          Update Scrollbar
+        </button>
+      </div>
     </div>
   );
 }
@@ -220,6 +264,7 @@ export interface IFScrollbarPlugin {
 ```
 
 ### List plugins
+
 ```bash
 bounceEffectPlugin
 bounceHighlightPlugin

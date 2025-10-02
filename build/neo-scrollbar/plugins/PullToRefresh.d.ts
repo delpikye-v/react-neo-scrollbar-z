@@ -1,8 +1,8 @@
 import React from "react";
 interface IFPullToRefreshProps {
     state: "idle" | "loading" | "done";
-    loadingContent: React.ReactNode;
-    loadDoneContent: React.ReactNode;
+    loading: React.ReactNode;
+    done: React.ReactNode;
 }
 declare const PullToRefresh: React.FC<IFPullToRefreshProps>;
 export default PullToRefresh;
