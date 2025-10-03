@@ -100,6 +100,7 @@ export interface IFScrollbarPlugin {
     onScroll?: (el: HTMLElement) => void;
     onDestroy?: () => void;
     render?: () => React.ReactNode;
+    renderDom?: () => HTMLElement;
     onScrollStart?: (el: HTMLElement) => void;
     onScrollStop?: (el: HTMLElement) => void;
     onReachTop?: () => void;

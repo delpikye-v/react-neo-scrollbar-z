@@ -17,6 +17,8 @@ export { default as snapToItemPlugin, IFSnapToItemOptions } from "./neo-scrollba
 export { default as stickyColumnsPlugin, IFStickyColumnsOptions } from "./neo-scrollbar/plugins/stickyColumnsPlugin";
 export { default as stickyHeaderPlugin, IFStickyHeaderOptions } from "./neo-scrollbar/plugins/stickyHeaderPlugin";
 export { default as PullToRefresh } from "./neo-scrollbar/plugins/PullToRefresh";
+export * from "./virtualized-list/VirtualizedList";
+export * from "./virtualized-list/useVirtual";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import "./neo-scrollbar/styles.scss";
 export default Scrollbar;
